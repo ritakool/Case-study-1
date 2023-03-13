@@ -219,22 +219,40 @@ class Cubes {
             this.fill(this.color)
         }
     
-        unDraw() {
-            this.fill(COLOR)
-        }
-    
         moveDown() {
             this.posY++;
-            this.updatePosition();
+            // this.updatePosition();
             drawBoard()
             // console.log(`posX: ${this.posX}  posY: ${this.posY}  x: ${this.x}  y: ${this.y}`);
             this.draw();
-        }
     
-        updatePosition() {
-            this.x = this.posX * SQ;
-            this.y = this.posY * SQ;
         }
+        moveLeft() {
+            this.posX--;
+            // this.posY++;
+            drawBoard()
+            this.draw()
+            
+        }
+        moveRight() {
+            this.posX++;
+            // this.posY++;
+            drawBoard()
+            this.draw()
+            
+        }
+
+
+        
+        // rotate() {
+        //     let nextCube = this.activecube[(this.cubeN+1) % this.cube.length]
+        // }
+
+    
+        // updatePosition() {
+        //     this.x = this.posX * SQ;
+        //     this.y = this.posY * SQ;
+        // }
     }
     
     function Randomhex() {
@@ -264,144 +282,33 @@ class Cubes {
     }
     
     let p = randomCube();
-    console.log(p);
+
+    document.addEventListener('keydown', function(even){
+        if (even.key === "ArrowLeft"){
+            p.moveLeft();
+        }
+        if (even.key === "ArrowRight"){
+            p.moveRight();
+        }
+        if (even.key === "ArrowDown"){
+            p.moveDown();
+        }
+    })
+    
+    
+    // console.log(p);
     
     let gameOver = false;
     
     function drop() {
         let timedrop = setInterval(function () {
             if (!gameOver) {
-                p.moveDown();
+                p.moveDown()
             } else {
                 clearInterval(timedrop)
             }
-        }, 1000)
+        }, 500)
     }
     
     drop();
 
-
-
-
-// const canvas = document.getElementById('canvas');
-// const context = canvas.getContext('2d');
-
-// const ROWS = 20;
-// const COLS = 10;
-// const SQUARE_SIZE = 30;
-// const COLOR = "white";
-
-// let board = [];
-
-// for (let r = 0; r < ROWS; r++) {
-//     let row = [];
-//     for (let c = 0; c < COLS; c++) {
-//         row.push(COLOR)
-//     }
-//     board.push(row);
-// }
-
-// function drawBoard() {
-//     for (let r = 0; r < ROWS; r++) {
-//         for (let c = 0; c < COLS; c++) {
-//             drawSquare(c, r, board[r][c]);
-//         }
-//     }
-// }
-
-// function drawSquare(x, y, color) {
-//     context.fillStyle = color;
-//     context.fillRect(x * SQUARE_SIZE,y* SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE);
-//     context.strokeStyle = "#444";
-//     context.strokeRect(x * SQUARE_SIZE, y* SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE);
-// }
-
-// class Cubes {
-//     constructor(cube, color) {
-//         this.cube = cube;
-//         this.color = color;
-
-//         this.cubeN = 0;
-//         this.activecube = this.cube[this.cubeN];
-
-//         this.posX = 3;
-//         this.posY = -2;
-//         this.x = this.posX * SQUARE_SIZE;
-//         this.y = this.posY * SQUARE_SIZE;
-//     }
-
-//     fill(color) {
-//         for (let r = 0; r < this.activecube.length; r++) {
-//             for (let c = 0; c < this.activecube.length; c++) {
-//                 if (this.activecube[r][c]) {
-//                     drawSquare(this.posX + c, this.posY + r, color)
-//                 }
-//             }
-//         }
-//     }
-
-//     draw() {
-//         this.fill(this.color)
-//     }
-
-//     unDraw() {
-//         this.fill(COLOR)
-//     }
-
-//     moveDown() {
-//         this.posY++;
-//         this.updatePosition();
-//         drawBoard()
-//         // console.log(`posX: ${this.posX}  posY: ${this.posY}  x: ${this.x}  y: ${this.y}`);
-//         this.draw();
-//     }
-
-//     updatePosition() {
-//         this.x = this.posX * SQUARE_SIZE;
-//         this.y = (ROWS - 1 - this.posY) * SQUARE_SIZE;
-//     }
-// }
-
-// function Randomhex() {
-//     return Math.floor(Math.random() * 255);
-// }
-
-// function getRandomcolor() {
-//     let red = Randomhex();
-//     let blue = Randomhex();
-//     let green = Randomhex();
-//     return "rgb(" + red + "," + blue + "," + green + ")"
-// }
-
-// let cubeColor = [
-//     [I, getRandomcolor()],
-//     [J, getRandomcolor()],
-//     [E, getRandomcolor()],
-//     [Z, getRandomcolor()],
-//     [O, getRandomcolor()],
-//     [L, getRandomcolor()],
-//     [R, getRandomcolor()]
-// ];
-
-// function randomCube() {
-//     let r = Math.floor(Math.random() * cubeColor.length);
-//     return new Cubes(cubeColor[r][0], cubeColor[r][1])
-// }
-
-// let p = randomCube();
-// console.log(p);
-
-// let gameOver = false;
-
-// function drop() {
-//     let timedrop = setInterval(function () {
-//         if (!gameOver) {
-//             p.moveDown();
-//             // drawBoard();
-//         } else {
-//             clearInterval(timedrop)
-//         }
-//     }, 1000)
-// }
-
-// drop();
