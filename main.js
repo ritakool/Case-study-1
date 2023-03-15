@@ -163,8 +163,10 @@ let ctx = canvas.getContext("2d");
 // khai báo kích thước bảng
 let ROW = 20;
 let COL = 10;
-let SQ = 30;
+let SQ = 35;
 let COLOR = "white";
+ctx.canvas.width = COL*SQ;
+ctx.canvas.height = (ROW - 3)*SQ;
 // Vẽ bảng
 let board = [];
 for (let r = 0; r < ROW; r++) {
@@ -364,6 +366,6 @@ function drop(){
         if (!gameOver){
             p.moveDown()
         }
-    },500)
+    },100)
 }
  drop();

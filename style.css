@@ -1,0 +1,28 @@
+body {
+    background-color: #008a12ad;
+  }
+h1 {
+color: rgb(0, 0, 0);
+font-family: 'Press Start 2P',cursive;
+text-align: center;
+}
+#score {
+    text-align: center;
+    color: rgb(0, 0, 0);
+    font-family: 'Press Start 2P',cursive;
+}
+#score-box {
+    text-align: center;
+    color: rgb(0, 0, 0);
+    font-family: 'Press Start 2P',cursive;
+}
+  #canvas {
+    position: absolute;
+    padding: 0;
+    margin:auto;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    border: 2px solid #00993b;
+}
