@@ -1,6 +1,4 @@
-
-
-let I = [
+const I = [
     [
         [0,0,0,0],
         [1,1,1,1],
@@ -25,8 +23,8 @@ let I = [
         [0,0,1,0],
         [0,0,1,0],
     ]
-]
-let J = [
+];
+const J = [
     [
         [0,1,0],
         [0,1,0],
@@ -38,17 +36,17 @@ let J = [
         [0,0,0]
     ],
     [
-        [1,1,0],
-        [1,0,0],
-        [1,0,0]
+        [0,1,1],
+        [0,1,0],
+        [0,1,0]
     ],
     [
+        [0,0,0],
         [1,1,1],
-        [0,0,1],
-        [0,0,0]
+        [0,0,1]
     ]
-]
-let E = [
+];
+const E = [
     [
         [0,0,0],
         [1,1,1],
@@ -69,8 +67,8 @@ let E = [
         [0,1,1],
         [0,1,0]
     ]
-]
-let Z = [
+];
+const Z = [
     [
         [1,1,0],
         [0,1,1],
@@ -78,9 +76,9 @@ let Z = [
     ],
     
     [
-        [0,1,0],
-        [1,1,0],
-        [1,0,0]
+        [0,0,1],
+        [0,1,1],
+        [0,1,0]
     ],
     [
         [0,0,0],
@@ -88,13 +86,13 @@ let Z = [
         [0,1,1]
     ],
     [
-        [0,0,1],
-        [0,1,1],
-        [0,1,0]
+        [0,1,0],
+        [1,1,0],
+        [1,0,0]
     ]
     
-]
-let O = [
+];
+const O = [
     [
         [1,1],
         [1,1]
@@ -111,8 +109,8 @@ let O = [
         [1,1],
         [1,1]
     ]
-]
-let L = [
+];
+const L = [
     [
         [0,1,0],
         [0,1,0],
@@ -133,17 +131,17 @@ let L = [
         [1,1,1],
         [0,0,0]
     ]
-]
-let R = [
+];
+const R = [
     [
         [0,1,1],
         [1,1,0],
         [0,0,0]
     ],
     [
-        [1,0,0],
-        [1,1,0],
-        [0,1,0]
+        [0,1,0],
+        [0,1,1],
+        [0,0,1]
     ],
     [
         [0,0,0],
@@ -151,19 +149,19 @@ let R = [
         [1,1,0]
     ],
     [
-        [0,1,0],
-        [0,1,1],
-        [0,0,1]
+        [1,0,0],
+        [1,1,0],
+        [0,1,0]
 
     ]
-]
+];
 let canvas = document.getElementById("canvas");
 let ctx = canvas.getContext("2d");
 
 let ROW = 20;
 let COL = 11;
 let SQ = 35;
-let COLOR = "WHITE";
+let COLOR = "white";
 
 let board = [];
 
@@ -190,7 +188,6 @@ function drawSquare (x,y,color){
     ctx.strokeRect(x*SQ,y*SQ,SQ,SQ)
 }
 
-
 class Cubes {
         constructor(cube, color) {
             this.cube = cube;
@@ -200,9 +197,7 @@ class Cubes {
             this.activecube = this.cube[this.cubeN];
     
             this.posX = 4;
-            this.posY = -2;
-            this.x = this.posX * SQ;
-            this.y = this.posY * SQ;
+            this.posY = 0;
         }
     
         fill(color) {
@@ -218,70 +213,107 @@ class Cubes {
         draw() {
             this.fill(this.color)
         }
-    
+        unDraw(){
+            this.fill(COLOR)
+        }
+        
         moveDown() {
-            this.posY++;
-            // this.updatePosition();
-            drawBoard()
-            // console.log(`posX: ${this.posX}  posY: ${this.posY}  x: ${this.x}  y: ${this.y}`);
-            this.draw();
-    
+            if (!this.checkCollision(this.posX, this.posY + 1, this.activecube)){
+                this.unDraw();
+                this.posY++;
+                this.draw();
+                
+                return;
+            }
+            this.lock();
+            let r = Math.floor(Math.random() * cubeColor.length);
+            this.cube = cubeColor[r][0];
+            this.color = cubeColor[r][1];
+            this.cubeN = 0;
+            this.activecube = this.cube[this.cubeN];
+            this.posX = 4;
+            this.posY = 0;
+            
         }
         moveLeft() {
-            this.posX--;
-            // this.posY++;
-            drawBoard()
-            this.draw()
-            
+            if (!this.checkCollision(this.posX - 1, this.posY, this.activecube)){
+                this.unDraw();
+                this.posX--;
+                this.draw()
+            } 
         }
         moveRight() {
-            this.posX++;
-            // this.posY++;
-            drawBoard()
-            this.draw()
-            
+            if (!this.checkCollision(this.posX + 1, this.posY,this.activecube)){
+                this.unDraw();
+                this.posX++;
+                this.draw()
+            }  
         }
 
-
+        rotate() {
+            const nextCubeN = (this.cubeN + 1) % this.cube.length;
+            const nextCube = this.cube[nextCubeN];
+            if (!this.checkCollision(this.posX, this.posY, nextCube)) {
+                this.unDraw();
+                this.cubeN = nextCubeN;
+                this.activecube = nextCube;
+                this.draw();
+            }
+        }
         
-        // rotate() {
-        //     let nextCube = this.activecube[(this.cubeN+1) % this.cube.length]
-        // }
+        checkCollision(posX, posY, cube) {
+            for (let r = 0; r < cube.length; r++) {
+                for (let c = 0; c < cube.length; c++) {
+                    if (!cube[r][c]) {
+                        continue;
+                    }
+                    if (posX + c  < 0 || posX + c >= COL || posY + r >= ROW) {
+                        return true;
+                    }
+                    if (posY < 0) {
+                        continue;
+                    }
+                    if (board[posY + r][posX + c ] !=COLOR) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        lock (){
+            for (let r = 0; r < this.activecube.length; r++) {
+                for (let c = 0; c < this.activecube.length; c++) {
+                    if (this.activecube[r][c]){
+                        board[this.posY + r ][this.posX + c] = this.color;
+                    }
+                }
+            }
+        }
+    }
+    
+const colors = ["red", "Violet", "green", "black", "orange", "purple"];
+function getRandomcolor() {
+    return colors[Math.floor(Math.random() * colors.length)];
+}
+    
+let cubeColor = [
+    [I, getRandomcolor()],
+    [J, getRandomcolor()],
+    [E, getRandomcolor()],
+    [Z, getRandomcolor()],
+    [O, getRandomcolor()],
+    [L, getRandomcolor()],
+    [R, getRandomcolor()]
+];
+    
+function randomCube() {
+    let r = Math.floor(Math.random() * cubeColor.length);
+    return new Cubes(cubeColor[r][0], cubeColor[r][1])
+}
 
     
-        // updatePosition() {
-        //     this.x = this.posX * SQ;
-        //     this.y = this.posY * SQ;
-        // }
-    }
-    
-    function Randomhex() {
-        return Math.floor(Math.random() * 255);
-    }
-    
-    function getRandomcolor() {
-        let red = Randomhex();
-        let blue = Randomhex();
-        let green = Randomhex();
-        return "rgb(" + red + "," + blue + "," + green + ")"
-    }
-    
-    let cubeColor = [
-        [I, getRandomcolor()],
-        [J, getRandomcolor()],
-        [E, getRandomcolor()],
-        [Z, getRandomcolor()],
-        [O, getRandomcolor()],
-        [L, getRandomcolor()],
-        [R, getRandomcolor()]
-    ];
-    
-    function randomCube() {
-        let r = Math.floor(Math.random() * cubeColor.length);
-        return new Cubes(cubeColor[r][0], cubeColor[r][1])
-    }
-    
-    let p = randomCube();
+let p = randomCube();
 
     document.addEventListener('keydown', function(even){
         if (even.key === "ArrowLeft"){
@@ -293,22 +325,10 @@ class Cubes {
         if (even.key === "ArrowDown"){
             p.moveDown();
         }
-    })
-    
-    
-    // console.log(p);
-    
-    let gameOver = false;
-    
-    function drop() {
-        let timedrop = setInterval(function () {
-            if (!gameOver) {
-                p.moveDown()
-            } else {
-                clearInterval(timedrop)
-            }
-        }, 500)
+        if (even.key === "ArrowUp"){
+            p.rotate();
+        
     }
-    
-    drop();
+    })
+drawBoard()
 
