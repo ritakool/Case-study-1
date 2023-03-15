@@ -231,6 +231,7 @@ class Cubes {
             this.posX = 3;
             this.posY = 0;
             if (this.checkCollision(this.posX,this.posY +1,this.activecube)){
+                gameOver = true;
             alert('kết thúc trò chơi')
             alert("điểm của bạn là: " +score)
             }
@@ -339,7 +340,7 @@ function randomCube() {
     
 let p = randomCube();
 // ADD sự kiện bàn phím
-    document.addEventListener('keydown', function(even){
+document.addEventListener('keydown', function(even){
         if (even.key === "ArrowLeft"){
             p.moveLeft();
         }
@@ -352,7 +353,7 @@ let p = randomCube();
         if (even.key === "ArrowUp"){
             p.rotate();  
         }
-    })
+})
 drawBoard()
 // set tự động chạy.
 let gameOver = false;
@@ -361,8 +362,8 @@ function drop(){
         if (!gameOver){
             p.moveDown()
         }else {
-            clearInterval(timedrop)
+        clearInterval(timedrop)
         }
-    },250)
+    },500)
 }
  drop();
