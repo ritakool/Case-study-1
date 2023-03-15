@@ -341,6 +341,7 @@ function randomCube() {
 let p = randomCube();
 // ADD sự kiện bàn phím
 document.addEventListener('keydown', function(even){
+    if (!gameOver){
         if (even.key === "ArrowLeft"){
             p.moveLeft();
         }
@@ -353,6 +354,7 @@ document.addEventListener('keydown', function(even){
         if (even.key === "ArrowUp"){
             p.rotate();  
         }
+    }
 })
 drawBoard()
 // set tự động chạy.
@@ -361,8 +363,6 @@ function drop(){
     let timedrop = setInterval(function(){
         if (!gameOver){
             p.moveDown()
-        }else {
-        clearInterval(timedrop)
         }
     },500)
 }
